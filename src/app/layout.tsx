@@ -22,9 +22,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Thermopair — Climate Care | HVAC in Massachusetts",
+  title: "Thermopair HVAC-R | Heating, Cooling & Refrigeration Service — Dracut, MA",
   description:
-    "Heating and cooling installation and maintenance across Massachusetts. Human service, fast emergency response, and clear pricing before we start.",
+    "HVAC and commercial refrigeration diagnostics, repair and maintenance for homes and businesses in Worcester County and Central Massachusetts. Walk-in coolers, freezers, reach-ins and draft beer systems. 24/7 emergency service.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

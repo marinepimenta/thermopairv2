@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
-// No GitHub Pages o site fica em /thermopair; em dev local segue na raiz.
-const basePath = process.env.GITHUB_ACTIONS ? "/thermopair" : "";
+// No GitHub Pages o site fica em /<nome-do-repositório>; em dev local segue na raiz.
+const repoName = process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "thermopair";
+const basePath = process.env.GITHUB_ACTIONS ? `/${repoName}` : "";
 
 const nextConfig: NextConfig = {
   output: "export",

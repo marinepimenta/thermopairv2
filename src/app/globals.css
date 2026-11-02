@@ -157,6 +157,68 @@
   --color-thermo-purple-deep: #5021e0;
   --color-thermo-purple-soft: #9487fe;
   --color-thermo-purple-pale: #b7b2ff;
+
+  /* ── Thermopair HVAC-R design system (UI UX Pro Max, approved) ───────
+     Heat (brand orange) = action. Cold (blue) = refrigeration accents.
+     Steel neutrals carry everything else. No gradients outside the logo.
+     Contrast (WCAG): ink on heat ≈ 6:1 · heat-text on white ≈ 5.2:1 ·
+     cold on white ≈ 5.5:1 · steel-600 on white ≈ 7.5:1. White text on
+     heat is ≈ 3:1 and is NOT allowed for button labels. */
+  --color-ink: #0f172a;
+  --color-steel-950: #0b1220;
+  --color-steel-900: #111827;
+  --color-steel-800: #1f2937;
+  --color-steel-700: #334155;
+  --color-steel-600: #475569;
+  --color-steel-400: #94a3b8;
+  --color-steel-300: #cbd5e1;
+  --color-steel-200: #e2e8f0;
+  --color-steel-100: #f1f5f9;
+  --color-paper: #f8fafc;
+
+  --color-heat: #ff6512;
+  --color-heat-hover: #f04806;
+  --color-heat-text: #c2410c;
+  --color-heat-pale: #fff1e8;
+
+  --color-cold: #0b6fa4;
+  --color-cold-light: #7dd3fc;
+  --color-cold-pale: #e8f4fb;
+
+  --color-ok: #15803d;
+  --color-err: #b91c1c;
+}
+
+/* ── Thermopair HVAC-R page shell ─────────────────────────────────────── */
+.tp-page {
+  font-family: var(--font-body), system-ui, sans-serif;
+  color: var(--color-ink);
+  background: var(--color-paper);
+}
+.tp-page :where(h1, h2, h3, h4) {
+  font-family: var(--font-heading), system-ui, sans-serif;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.tp-page :where(p) {
+  text-wrap: pretty;
+}
+/* Tabular figures for phone numbers, hours and temperatures. */
+.tp-num {
+  font-variant-numeric: tabular-nums;
+}
+/* Focus: cold blue on light surfaces, light blue on dark ones (≥3:1). */
+.tp-page :where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--color-cold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.tp-page .tp-dark :where(a, button, input, select, textarea, summary):focus-visible {
+  outline-color: var(--color-cold-light);
+}
+/* Sticky header must not hide anchored sections or focused fields. */
+.tp-page :where(section[id], [id].tp-anchor) {
+  scroll-margin-top: 96px;
 }
 
 /* ── Bandas dark / light ────────────────────────────────────────────── */
