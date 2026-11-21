@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { CircleAlert, CircleCheck, Clock, Phone } from "lucide-react";
+import Link from "next/link";
+import { CircleAlert, CircleCheck, Phone } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { SERVICES as ALL_SERVICES } from "@/lib/services";
@@ -74,7 +75,7 @@ function validate(v: Values): Partial<Record<Field, string>> {
 const ORDER: Field[] = ["name", "phone", "email", "location", "property", "service", "urgency", "consent"];
 
 const inputBase =
-  "block min-h-12 w-full rounded-md border bg-white px-3.5 font-body text-[16px] text-ink placeholder:text-steel-400 transition-colors duration-200 focus:border-cold";
+  "block min-h-12 w-full rounded-[4px] border bg-white px-3.5 font-body text-[16px] text-ink placeholder:text-steel-400 transition-colors duration-200 focus:border-ink";
 
 export default function RequestForm({ defaultService }: { defaultService?: string }) {
   // Only one form per page, so stable ids keep the error-summary links simple.
@@ -131,17 +132,18 @@ export default function RequestForm({ defaultService }: { defaultService?: strin
   const border = (f: Field) => (show(f) ? "border-err" : "border-steel-300");
 
   return (
-    <section id="request-service" aria-labelledby="request-title" className="border-t border-steel-200 bg-paper py-16 md:py-24">
+    <section id="request-service" aria-labelledby="request-title" className="tp-dark tp-grad-form py-16 text-white md:py-24">
       <div className={cn(container, "grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:gap-16")}>
         <div>
           <SectionHeading
             id="request-title"
+            surface="dark"
             eyebrow="Request service"
             title="Tell us what’s going on"
             lead="Send a few details and we’ll contact you to confirm a time. Diagnosis first, price before work starts."
           />
 
-          <div className="tp-dark mt-8 rounded-lg bg-steel-900 p-6 text-white">
+          <div className="tp-dark mt-8 border border-white/15 bg-ink/70 p-6 text-white">
             <p className="font-heading text-[18px] font-semibold">System down right now?</p>
             <p className="mt-1 font-body text-[15px] leading-[1.55] text-steel-300">
               Don’t wait for a reply — call our 24/7 line.
@@ -152,13 +154,12 @@ export default function RequestForm({ defaultService }: { defaultService?: strin
             </a>
           </div>
 
-          <p className="mt-6 flex items-start gap-2 font-body text-[15px] text-steel-600">
-            <Clock aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
-            <span className="tp-num">Office hours: Mon–Fri, 8 AM – 5 PM. Emergency service 24/7.</span>
+          <p className="tp-num mt-6 font-body text-[15px] text-steel-300">
+            Office hours: Mon–Fri, 8 AM – 5 PM. Emergency service 24/7.
           </p>
         </div>
 
-        <div className="rounded-lg border border-steel-200 bg-white p-5 sm:p-8">
+        <div className="rounded-[4px] bg-white p-5 sm:p-8">
           {sent ? (
             <div role="status" className="py-8 text-center">
               <CircleCheck aria-hidden="true" className="mx-auto h-12 w-12 text-ok" />
@@ -179,7 +180,7 @@ export default function RequestForm({ defaultService }: { defaultService?: strin
                   tabIndex={-1}
                   role="alert"
                   aria-labelledby={id("summary-title")}
-                  className="mb-6 rounded-md border border-err bg-[#fef2f2] p-4 outline-none focus-visible:outline-3 focus-visible:outline-err"
+                  className="mb-6 rounded-[4px] border border-err bg-[#fef2f2] p-4 outline-none focus-visible:outline-3 focus-visible:outline-err"
                 >
                   <p id={id("summary-title")} className="font-body text-[16px] font-semibold text-err">
                     Please fix {errorList.length === 1 ? "1 field" : `${errorList.length} fields`} before sending:
@@ -272,7 +273,7 @@ export default function RequestForm({ defaultService }: { defaultService?: strin
                 </div>
               </fieldset>
 
-              <fieldset className="mt-8 border-t border-steel-200 pt-6">
+              <fieldset className="mt-8 border-t border-steel-300 pt-6">
                 <legend className="mb-4 font-heading text-[18px] font-semibold text-ink">About the job</legend>
 
                 <div className="grid gap-5 sm:grid-cols-2">
@@ -288,7 +289,7 @@ export default function RequestForm({ defaultService }: { defaultService?: strin
                         <label
                           key={p}
                           className={cn(
-                            "flex min-h-12 cursor-pointer items-center gap-2.5 rounded-md border px-3.5 font-body text-[16px] text-ink transition-colors duration-200 has-[:checked]:border-cold has-[:checked]:bg-cold-pale",
+                            "flex min-h-12 cursor-pointer items-center gap-2.5 rounded-[4px] border px-3.5 font-body text-[16px] text-ink transition-colors duration-200 has-[:checked]:border-ink has-[:checked]:bg-heat-pale",
                             show("property") ? "border-err" : "border-steel-300",
                           )}
                         >
@@ -299,7 +300,7 @@ export default function RequestForm({ defaultService }: { defaultService?: strin
                             checked={values.property === p}
                             onChange={() => set("property", p)}
                             onBlur={blur("property")}
-                            className="h-4 w-4 accent-cold"
+                            className="h-4 w-4 accent-ink"
                           />
                           {p}
                         </label>
@@ -341,7 +342,7 @@ export default function RequestForm({ defaultService }: { defaultService?: strin
                       <label
                         key={u.value}
                         className={cn(
-                          "flex min-h-12 cursor-pointer items-center gap-2.5 rounded-md border px-3.5 py-2 font-body text-[15px] leading-[1.35] text-ink transition-colors duration-200 has-[:checked]:border-cold has-[:checked]:bg-cold-pale",
+                          "flex min-h-12 cursor-pointer items-center gap-2.5 rounded-[4px] border px-3.5 py-2 font-body text-[15px] leading-[1.35] text-ink transition-colors duration-200 has-[:checked]:border-ink has-[:checked]:bg-heat-pale",
                           show("urgency") ? "border-err" : "border-steel-300",
                         )}
                       >
@@ -352,7 +353,7 @@ export default function RequestForm({ defaultService }: { defaultService?: strin
                           checked={values.urgency === u.value}
                           onChange={() => set("urgency", u.value)}
                           onBlur={blur("urgency")}
-                          className="h-4 w-4 shrink-0 accent-cold"
+                          className="h-4 w-4 shrink-0 accent-ink"
                         />
                         {u.label}
                       </label>
@@ -360,7 +361,7 @@ export default function RequestForm({ defaultService }: { defaultService?: strin
                   </div>
                   {fieldError("urgency")}
                   {values.urgency === "emergency" && (
-                    <p className="mt-3 rounded-md bg-heat-pale p-3 font-body text-[15px] text-ink">
+                    <p className="mt-3 rounded-[4px] bg-heat-pale p-3 font-body text-[15px] text-ink">
                       For the fastest response, also call{" "}
                       <a href={PHONE_HREF} className="tp-num font-semibold underline underline-offset-4">{PHONE_DISPLAY}</a>.
                     </p>
@@ -396,12 +397,12 @@ export default function RequestForm({ defaultService }: { defaultService?: strin
                     checked={values.consent}
                     onChange={(e) => set("consent", e.target.checked)}
                     onBlur={blur("consent")}
-                    className="mt-0.5 h-5 w-5 shrink-0 accent-cold"
+                    className="mt-0.5 h-5 w-5 shrink-0 accent-ink"
                   />
                   <span>
                     I agree to receive text and email messages from Thermopair about this request. I can opt out
                     anytime per the{" "}
-                    <a href="#" className="underline underline-offset-2">Privacy Policy</a>.{req}
+                    <Link href="/privacy-policy/" className="underline underline-offset-2">Privacy Policy</Link>.{req}
                   </span>
                 </label>
                 {fieldError("consent")}

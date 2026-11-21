@@ -39,3 +39,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI agent tooling — local developer setup, not part of the site
+/.agents/
+/.impeccable/
+/.claude/agents/
+/.claude/skills/
+/.github/agents/
+/.github/hooks/
+/.github/skills/
+skills-lock.json
+
+# Original job photos from the client (WhatsApp originals).
+# The optimised, web-sized copies live in public/thermopair/work/.
+/images/

@@ -1,6 +1,10 @@
-import { ArrowUpRight } from "lucide-react";
+"use client";
 
-import { GOOGLE_REVIEWS_URL, GoogleGlyph, Stars } from "@/components/sites/blivecleaning-com-9414df84/root-8a5edab2/SocialProof";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { GOOGLE_REVIEWS_URL, GoogleGlyph, ReviewAvatar, Stars, VerifiedGlyph } from "./SocialProof";
 import { SectionHeading, container } from "./ui";
 
 /**
@@ -10,6 +14,9 @@ import { SectionHeading, container } from "./ui";
  * received, so it keeps the longer text previously transcribed from the
  * Google profile. Star ratings were not included in the copy; all reviews
  * are shown as 5 stars.
+ *
+ * To add a new review: append `{ author, quote }` here — the carousel, the
+ * card sizing and the arrows all follow the array length on their own.
  */
 const REVIEWS = [
   {
@@ -62,9 +69,108 @@ const REVIEWS = [
   },
 ];
 
-export default function Reviews() {
+/** Above this, the card clamps the quote and offers “Read more”. */
+const CLAMP_AT = 190;
+
+function ReviewCard({ author, quote }: { author: string; quote: string }) {
+  const [open, setOpen] = useState(false);
+  const long = quote.length > CLAMP_AT;
+
   return (
-    <section id="reviews" aria-labelledby="reviews-title" className="bg-white py-16 md:py-24">
+    <li className="flex w-[290px] shrink-0 snap-start sm:w-[340px]">
+      <figure className="flex w-full flex-col rounded-2xl border border-steel-200 bg-white p-6 shadow-[0_1px_2px_rgba(19,19,19,0.04),0_12px_28px_-18px_rgba(19,19,19,0.28)]">
+        <div className="flex items-center gap-3">
+          <ReviewAvatar name={author} />
+          <figcaption className="min-w-0 flex-1">
+            <span className="block truncate font-body text-[15px] font-semibold text-ink">{author}</span>
+            <span className="font-body text-[13px] text-steel-600">Google review</span>
+          </figcaption>
+          <GoogleGlyph size={18} />
+        </div>
+
+        <div className="mt-4 flex items-center gap-2">
+          <Stars size={15} className="text-heat" />
+          <VerifiedGlyph />
+          <span className="sr-only">Rated 5 out of 5 stars on Google</span>
+        </div>
+
+        <blockquote
+          className={cn(
+            "mt-3 whitespace-pre-line font-body text-[15px] leading-[1.6] text-steel-700",
+            !open && "line-clamp-5",
+          )}
+        >
+          {quote}
+        </blockquote>
+
+        {long && (
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="mt-3 cursor-pointer self-start font-body text-[14px] font-semibold text-purple-deep underline underline-offset-4 hover:text-purple"
+          >
+            {open ? "Read less" : "Read more"}
+            <span className="sr-only"> of {author}’s review</span>
+          </button>
+        )}
+      </figure>
+    </li>
+  );
+}
+
+function ArrowButton({
+  dir,
+  disabled,
+  onClick,
+}: {
+  dir: "prev" | "next";
+  disabled: boolean;
+  onClick: () => void;
+}) {
+  const Icon = dir === "prev" ? ChevronLeft : ChevronRight;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={dir === "prev" ? "Previous reviews" : "Next reviews"}
+      className="inline-flex size-11 cursor-pointer items-center justify-center rounded-full border border-steel-300 bg-white text-ink transition-colors duration-200 hover:border-ink hover:bg-ink hover:text-white disabled:cursor-default disabled:border-steel-200 disabled:bg-white disabled:text-steel-300"
+    >
+      <Icon aria-hidden="true" className="h-5 w-5" />
+    </button>
+  );
+}
+
+export default function Reviews() {
+  const track = useRef<HTMLUListElement>(null);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
+
+  const sync = useCallback(() => {
+    const el = track.current;
+    if (!el) return;
+    setAtStart(el.scrollLeft <= 2);
+    setAtEnd(el.scrollLeft >= el.scrollWidth - el.clientWidth - 2);
+  }, []);
+
+  // Card widths change at the sm breakpoint, so recheck on resize too.
+  useEffect(() => {
+    sync();
+    window.addEventListener("resize", sync);
+    return () => window.removeEventListener("resize", sync);
+  }, [sync]);
+
+  const nudge = (dir: 1 | -1) => {
+    const el = track.current;
+    if (!el) return;
+    // One card plus its gap, so a click always lands on a card edge.
+    const card = el.firstElementChild as HTMLElement | null;
+    const step = card ? card.offsetWidth + 24 : el.clientWidth * 0.8;
+    el.scrollBy({ left: dir * step, behavior: "smooth" });
+  };
+
+  return (
+    <section id="reviews" aria-labelledby="reviews-title" className="bg-paper py-16 md:py-24">
       <div className={container}>
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <SectionHeading
@@ -72,39 +178,56 @@ export default function Reviews() {
             eyebrow="Customer reviews"
             title="What homeowners and business owners say"
           />
-          <a
-            href={GOOGLE_REVIEWS_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-11 shrink-0 items-center gap-2 font-body text-[16px] font-semibold text-heat-text underline-offset-4 hover:underline"
-          >
-            <GoogleGlyph size={18} />
-            Read all reviews on Google
-            <ArrowUpRight aria-hidden="true" className="h-[18px] w-[18px]" />
-            <span className="sr-only">(opens in a new tab)</span>
-          </a>
+          <div className="hidden shrink-0 gap-3 md:flex">
+            <ArrowButton dir="prev" disabled={atStart} onClick={() => nudge(-1)} />
+            <ArrowButton dir="next" disabled={atEnd} onClick={() => nudge(1)} />
+          </div>
         </div>
 
-        {/* Masonry columns: reviews vary a lot in length. */}
-        <ul className="mt-10 columns-1 gap-5 md:columns-2 lg:columns-3">
-          {REVIEWS.map((r) => (
-            <li key={r.author} className="mb-5 break-inside-avoid">
-              <figure className="flex flex-col rounded-lg border border-steel-200 bg-paper p-6">
-                <div className="flex items-center gap-2">
-                  <Stars size={16} className="text-heat" />
-                  <span className="sr-only">5 out of 5 stars on Google</span>
-                </div>
-                <blockquote className="mt-4 whitespace-pre-line font-body text-[16px] leading-[1.65] text-ink">
-                  “{r.quote}”
-                </blockquote>
-                <figcaption className="mt-5 border-t border-steel-200 pt-4 font-body text-[15px]">
-                  <span className="block font-semibold text-ink">{r.author}</span>
-                  <span className="text-steel-600">Google review</span>
-                </figcaption>
-              </figure>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-10 grid gap-8 lg:grid-cols-[232px_minmax(0,1fr)] lg:items-center lg:gap-12">
+          {/* Rating rail: the verdict, stated once and large. No review count —
+              the rating is the claim, not the volume. */}
+          <div className="text-center lg:text-left">
+            <p className="font-heading text-[clamp(2.125rem,4vw,2.75rem)] font-bold uppercase leading-none tracking-[-0.01em] text-ink">
+              Excellent
+            </p>
+            <Stars size={28} className="mt-3 justify-center text-heat lg:justify-start" />
+            <p className="mt-3 font-body text-[16px] leading-[1.5] text-steel-600">
+              <span className="font-semibold text-ink">5-star rated</span> by homeowners and
+              business owners on Google.
+            </p>
+            <a
+              href={GOOGLE_REVIEWS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex min-h-11 items-center gap-2 font-body text-[15px] font-semibold text-purple-deep underline underline-offset-4 hover:text-purple"
+            >
+              <GoogleGlyph size={17} />
+              Read reviews on Google
+              <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
+              <span className="sr-only">(opens in a new tab)</span>
+            </a>
+          </div>
+
+          {/* Scroller is focusable so the arrows aren't the only way through. */}
+          <ul
+            ref={track}
+            onScroll={sync}
+            tabIndex={0}
+            role="region"
+            aria-label="Customer reviews from Google, scrollable"
+            className="scrollbar-hide -mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
+          >
+            {REVIEWS.map((r) => (
+              <ReviewCard key={r.author} {...r} />
+            ))}
+          </ul>
+        </div>
+
+        <div className="mt-2 flex justify-center gap-3 md:hidden">
+          <ArrowButton dir="prev" disabled={atStart} onClick={() => nudge(-1)} />
+          <ArrowButton dir="next" disabled={atEnd} onClick={() => nudge(1)} />
+        </div>
       </div>
     </section>
   );

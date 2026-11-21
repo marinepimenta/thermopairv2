@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, MapPin, Menu, Phone, X } from "lucide-react";
+import { Menu, Phone, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { LOGO_SRC, PHONE_DISPLAY, PHONE_HREF, btnPrimary, container } from "./ui";
@@ -18,7 +18,7 @@ const NAV = [
   { label: "Refrigeration", href: "/services/commercial-refrigeration/" },
   { label: "How we work", href: "/#how-we-work" },
   { label: "Reviews", href: "/#reviews" },
-  { label: "Service area", href: "/#service-area" },
+  { label: "Service area", href: "/service-area/" },
   { label: "FAQ", href: "/#faq" },
 ];
 
@@ -49,20 +49,11 @@ export default function SiteHeader() {
             "flex h-10 items-center justify-between font-body text-[14px]",
           )}
         >
-          <p className="flex items-center gap-5">
-            <span className="inline-flex items-center gap-2">
-              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-heat" />
-              <span className="font-semibold text-white">24/7 emergency service</span>
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <MapPin aria-hidden="true" className="h-4 w-4" />
-              Based in Dracut, Massachusetts
-            </span>
+          <p className="flex items-center gap-6">
+            <span className="font-semibold text-white">24/7 emergency service</span>
+            <span>Based in Dracut, Massachusetts</span>
           </p>
-          <p className="inline-flex items-center gap-1.5">
-            <Clock aria-hidden="true" className="h-4 w-4" />
-            <span className="tp-num">Office: Mon–Fri, 8 AM – 5 PM</span>
-          </p>
+          <p className="tp-num">Office: Mon–Fri, 8 AM – 5 PM</p>
         </div>
       </div>
 
@@ -85,7 +76,7 @@ export default function SiteHeader() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="rounded-md px-3 py-2 font-body text-[15px] font-medium text-steel-700 transition-colors duration-200 hover:bg-steel-100 hover:text-ink"
+                    className="px-3 py-2 font-body text-[15px] font-medium text-steel-700 underline-offset-8 transition-colors duration-200 hover:text-ink hover:underline"
                   >
                     {item.label}
                   </Link>
@@ -97,9 +88,8 @@ export default function SiteHeader() {
           <div className="ml-auto flex items-center gap-2 lg:ml-4">
             <a
               href={PHONE_HREF}
-              className="hidden min-h-11 items-center gap-2 rounded-md px-3 font-body text-[16px] font-semibold text-ink transition-colors duration-200 hover:bg-steel-100 sm:inline-flex"
+              className="hidden min-h-11 items-center px-3 font-body text-[16px] font-semibold text-ink underline-offset-4 hover:underline sm:inline-flex"
             >
-              <Phone aria-hidden="true" className="h-[18px] w-[18px] text-heat-text" />
               <span className="tp-num">{PHONE_DISPLAY}</span>
             </a>
             <a href="#request-service" className={cn(btnPrimary, "hidden min-h-11 px-5 text-[15px] md:inline-flex")}>
@@ -108,7 +98,7 @@ export default function SiteHeader() {
             <a
               href={PHONE_HREF}
               aria-label={`Call Thermopair at ${PHONE_DISPLAY}`}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-steel-300 text-ink sm:hidden"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-[4px] border border-steel-300 text-ink sm:hidden"
             >
               <Phone aria-hidden="true" className="h-5 w-5" />
             </a>
@@ -119,7 +109,7 @@ export default function SiteHeader() {
               aria-controls="mobile-menu"
               aria-label={open ? "Close menu" : "Open menu"}
               onClick={() => setOpen((v) => !v)}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-steel-300 text-ink lg:hidden"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-[4px] border border-steel-300 text-ink lg:hidden"
             >
               {open ? <X aria-hidden="true" className="h-5 w-5" /> : <Menu aria-hidden="true" className="h-5 w-5" />}
             </button>

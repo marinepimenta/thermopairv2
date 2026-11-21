@@ -136,7 +136,7 @@
 }
 /* ── Thermopair — Climate Care | design tokens ──────────────────────── */
 @theme {
-  --font-heading: var(--font-heading), system-ui, sans-serif;
+  --font-heading: var(--font-heading), "Libre Baskerville", Georgia, serif;
   --font-body: var(--font-body), Inter, system-ui, sans-serif;
 
   /* Base */
@@ -164,22 +164,32 @@
      Contrast (WCAG): ink on heat ≈ 6:1 · heat-text on white ≈ 5.2:1 ·
      cold on white ≈ 5.5:1 · steel-600 on white ≈ 7.5:1. White text on
      heat is ≈ 3:1 and is NOT allowed for button labels. */
-  --color-ink: #0f172a;
-  --color-steel-950: #0b1220;
-  --color-steel-900: #111827;
-  --color-steel-800: #1f2937;
-  --color-steel-700: #334155;
-  --color-steel-600: #475569;
-  --color-steel-400: #94a3b8;
-  --color-steel-300: #cbd5e1;
-  --color-steel-200: #e2e8f0;
-  --color-steel-100: #f1f5f9;
-  --color-paper: #f8fafc;
+  /* Neutrals migrated to the brand palette (Visual Identity Guidelines):
+     #131313 black, #2c2e33 graphite, #8f97a2 slate, #ebecee mist,
+     #f8f9fa paper. Text greys between graphite and slate are tints of
+     the palette, chosen to keep body text above 7:1 on white. */
+  --color-ink: #131313;
+  --color-steel-950: #131313;
+  --color-steel-900: #131313;
+  --color-steel-800: #2c2e33;
+  --color-steel-700: #2c2e33;
+  --color-steel-600: #4f535b;
+  --color-steel-400: #8f97a2;
+  --color-steel-300: #c9cdd2;
+  --color-steel-200: #e1e3e6;
+  --color-steel-100: #ebecee;
+  --color-paper: #f8f9fa;
 
   --color-heat: #ff6512;
   --color-heat-hover: #f04806;
   --color-heat-text: #c2410c;
   --color-heat-pale: #fff1e8;
+
+  /* Brand Purple: primary actions and the cool side of the gradients. */
+  --color-purple: #694cfc;
+  --color-purple-deep: #5021e0;
+  --color-purple-soft: #9487fe;
+  --color-purple-pale: #b7b2ff;
 
   --color-cold: #0b6fa4;
   --color-cold-light: #7dd3fc;
@@ -196,9 +206,17 @@
   background: var(--color-paper);
 }
 .tp-page :where(h1, h2, h3, h4) {
-  font-family: var(--font-heading), system-ui, sans-serif;
-  letter-spacing: -0.015em;
+  font-family: var(--font-heading), "Libre Baskerville", Georgia, serif;
+  letter-spacing: -0.005em;
   text-wrap: balance;
+}
+/* Browser surfaces in brand colors. */
+.tp-page ::selection {
+  background: var(--color-heat);
+  color: var(--color-ink);
+}
+.tp-page :where(input, textarea) {
+  caret-color: var(--color-heat-text);
 }
 .tp-page :where(p) {
   text-wrap: pretty;
@@ -207,18 +225,61 @@
 .tp-num {
   font-variant-numeric: tabular-nums;
 }
-/* Focus: cold blue on light surfaces, light blue on dark ones (≥3:1). */
+/* Focus: ink on light and brand-orange surfaces, white on dark ones (≥3:1). */
 .tp-page :where(a, button, input, select, textarea, summary):focus-visible {
-  outline: 3px solid var(--color-cold);
+  outline: 3px solid var(--color-ink);
   outline-offset: 2px;
   border-radius: 4px;
 }
 .tp-page .tp-dark :where(a, button, input, select, textarea, summary):focus-visible {
-  outline-color: var(--color-cold-light);
+  outline-color: #ffffff;
 }
 /* Sticky header must not hide anchored sections or focused fields. */
 .tp-page :where(section[id], [id].tp-anchor) {
   scroll-margin-top: 96px;
+}
+
+/* ── Brand gradient surfaces (Visual Identity Guidelines) ───────────────
+   Built only from the official palette over Brand Black, with the
+   guideline's film grain. Contrast rule: text on these surfaces is white
+   or mist, and the orange glow is kept at <=0.6 alpha so no text ever sits
+   on pure #ff6512 (white on full orange is ~3:1). Heat = warm glow,
+   cold = purple glow: the brand's own temperature metaphor. */
+.tp-grad-hero,
+.tp-grad-cool,
+.tp-grad-warm,
+.tp-grad-form {
+  background-color: #131313;
+  /* Gradients are sized to the box, so repeating only tiles the grain. */
+  background-repeat: repeat;
+}
+.tp-grad-hero {
+  background-image:
+    var(--tp-grain),
+    radial-gradient(40% 45% at 92% 100%, rgba(255, 101, 18, 0.6) 0%, rgba(255, 101, 18, 0) 70%),
+    radial-gradient(75% 85% at 95% 85%, rgba(105, 76, 252, 0.75) 0%, rgba(80, 33, 224, 0.4) 40%, rgba(19, 19, 19, 0) 75%),
+    radial-gradient(55% 45% at 0% 0%, rgba(80, 33, 224, 0.35) 0%, rgba(19, 19, 19, 0) 70%);
+}
+.tp-grad-cool {
+  background-image:
+    var(--tp-grain),
+    radial-gradient(95% 70% at 50% 118%, rgba(148, 135, 254, 0.55) 0%, rgba(105, 76, 252, 0.5) 30%, rgba(80, 33, 224, 0.25) 55%, rgba(19, 19, 19, 0) 80%);
+}
+.tp-grad-warm {
+  background-color: #2a1180;
+  background-image:
+    var(--tp-grain),
+    radial-gradient(60% 55% at 105% 108%, rgba(255, 101, 18, 0.6) 0%, rgba(255, 101, 18, 0) 70%),
+    linear-gradient(150deg, #1d0d5c 0%, #3b1aa8 45%, #5021e0 100%);
+}
+.tp-grad-form {
+  background-image:
+    var(--tp-grain),
+    radial-gradient(60% 80% at 0% 0%, rgba(105, 76, 252, 0.55) 0%, rgba(19, 19, 19, 0) 70%),
+    radial-gradient(55% 70% at 100% 100%, rgba(255, 101, 18, 0.5) 0%, rgba(80, 33, 224, 0.25) 45%, rgba(19, 19, 19, 0) 75%);
+}
+:root {
+  --tp-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* ── Bandas dark / light ────────────────────────────────────────────── */
@@ -361,6 +422,14 @@
   -ms-overflow-style: none;
 }
 .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+/* Mapa do Google embutido no rodapé escuro. O par invert + hue-rotate é o
+   truque padrão de "dark map": escurece os ladrilhos mantendo os rótulos
+   legíveis e as cores de via/água aproximadamente corretas. Saturação e
+   contraste baixos impedem que o mapa dispute atenção com os links. */
+.tp-map-dark {
+  filter: invert(0.92) hue-rotate(180deg) brightness(0.96) contrast(0.86) saturate(0.6);
+}
 
 /* Sublinhado que cresce no hover, usado em links de navegação e listas. */
 .link-underline {

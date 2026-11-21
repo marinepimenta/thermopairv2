@@ -1,8 +1,7 @@
 import Image from "next/image";
-import { Check } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { IMG, SectionHeading, btnOnLight, container } from "./ui";
+import { IMG, SectionHeading, btnLight, container, padStart } from "./ui";
 
 const STEPS = [
   {
@@ -42,13 +41,13 @@ export default function HowWeWork() {
             title="A clear process, with no surprises"
             lead="Whether it’s your living room or your kitchen line, every visit follows the same four steps."
           />
-          <ol className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <ol className="mt-12 grid gap-x-8 gap-y-8 md:grid-cols-2 lg:grid-cols-4">
             {STEPS.map((step, i) => (
-              <li key={step.title} className="border-t-2 border-steel-200 pt-6">
-                <span className="tp-num font-heading text-[15px] font-semibold text-heat-text">
+              <li key={step.title} className="border-t-2 border-ink pt-5">
+                <span className="tp-num font-heading text-[15px] font-bold text-heat-text">
                   Step {i + 1}
                 </span>
-                <h3 className="mt-2 font-heading text-[19px] font-semibold leading-[1.3] text-ink">{step.title}</h3>
+                <h3 className="mt-2 font-heading text-[20px] font-bold leading-[1.25] text-ink">{step.title}</h3>
                 <p className="mt-2 font-body text-[16px] leading-[1.6] text-steel-600">{step.text}</p>
               </li>
             ))}
@@ -56,39 +55,35 @@ export default function HowWeWork() {
         </div>
       </section>
 
-      <section aria-labelledby="maintenance-title" className="border-t border-steel-200 bg-paper py-16 md:py-24">
-        <div className={cn(container, "grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16")}>
-          <div>
-            <SectionHeading
-              id="maintenance-title"
-              eyebrow="Maintenance & efficiency"
-              title="Prevent the breakdown instead of paying for it"
-              lead="Regular maintenance keeps heating, cooling and refrigeration equipment running efficiently, extends its life and lowers the odds of a failure on the coldest night — or the busiest Friday."
-            />
-            <div className="mt-8 rounded-lg border border-steel-200 bg-white p-6">
-              <h3 className="font-heading text-[18px] font-semibold text-ink">A maintenance visit includes</h3>
-              <ul className="mt-4 grid gap-3">
-                {MAINTENANCE.map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 font-body text-[16px] leading-[1.5] text-steel-700">
-                    <Check aria-hidden="true" className="mt-0.5 h-[18px] w-[18px] shrink-0 text-ok" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <a href="#request-service" className={cn(btnOnLight, "mt-6")}>
-              Ask about maintenance
-            </a>
-          </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-steel-200 lg:aspect-[5/6]">
-            <Image
-              src={`${IMG}/hvac/technician-split-install.jpg`}
-              alt="Thermopair technician servicing an indoor air conditioning unit"
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-            />
-          </div>
+      <section aria-labelledby="maintenance-title" className="tp-dark grid bg-ink text-white lg:grid-cols-2">
+        <div className={cn("tp-grad-warm px-4 py-16 sm:px-6 lg:py-20 lg:pr-16", padStart)}>
+          <SectionHeading
+            id="maintenance-title"
+            surface="purple"
+            eyebrow="Maintenance & efficiency"
+            title="Prevent the breakdown instead of paying for it"
+            lead="Regular maintenance keeps heating, cooling and refrigeration equipment running efficiently, extends its life and lowers the odds of a failure on the coldest night — or the busiest Friday."
+          />
+          <h3 className="mt-8 font-heading text-[19px] font-bold text-white">A maintenance visit includes</h3>
+          <ul className="mt-3">
+            {MAINTENANCE.map((item) => (
+              <li key={item} className="border-t border-white/25 py-3 font-body text-[16px] leading-[1.5] text-purple-pale last:border-b">
+                {item}
+              </li>
+            ))}
+          </ul>
+          <a href="#request-service" className={cn(btnLight, "mt-8")}>
+            Ask about maintenance
+          </a>
+        </div>
+        <div className="relative aspect-[4/3] lg:aspect-auto lg:min-h-[560px]">
+          <Image
+            src={`${IMG}/hvac/technician-split-install.jpg`}
+            alt="Thermopair technician servicing an indoor air conditioning unit"
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-cover"
+          />
         </div>
       </section>
     </>

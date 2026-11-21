@@ -1,5 +1,6 @@
 import About from "@/components/thermopair/About";
-import Faq from "@/components/thermopair/Faq";
+import Faq, { FAQS } from "@/components/thermopair/Faq";
+import { JsonLd, faqSchema } from "@/components/thermopair/Schema";
 import Hero from "@/components/thermopair/Hero";
 import HowWeWork from "@/components/thermopair/HowWeWork";
 import PageShell from "@/components/thermopair/PageShell";
@@ -20,12 +21,16 @@ import Services from "@/components/thermopair/Services";
 export default function Home() {
   return (
     <PageShell>
+      {/* Mirrors the FAQ section below — the markup must match the visible text. */}
+      <JsonLd data={faqSchema(FAQS)} />
       <Hero />
       <PathChooser />
-      <Services />
+      {/* The differentiator comes right after the chooser, before the full service list. */}
       <Refrigeration />
-      <HowWeWork />
+      {/* Real job photos right after refrigeration: most of them are refrigeration work. */}
       <RecentWork />
+      <Services />
+      <HowWeWork />
       <Reviews />
       <About />
       <ServiceArea />

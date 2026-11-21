@@ -1,26 +1,35 @@
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 export type Crumb = { label: string; href?: string };
 
-export default function Breadcrumbs({ items }: { items: Crumb[] }) {
+/** Default is the dark/gradient hero surface; `heat` is kept for legacy solid-orange bands. */
+export default function Breadcrumbs({
+  items,
+  surface = "dark",
+}: {
+  items: Crumb[];
+  surface?: "dark" | "heat";
+}) {
+  const heat = surface === "heat";
   return (
     <nav aria-label="Breadcrumb">
-      <ol className="flex flex-wrap items-center gap-1.5 font-body text-[14px] text-steel-400">
+      <ol className={cn("flex flex-wrap items-center gap-2 font-body text-[14px]", heat ? "text-ink" : "text-steel-400")}>
         {items.map((c, i) => {
           const last = i === items.length - 1;
           return (
-            <li key={c.label} className="flex items-center gap-1.5">
+            <li key={c.label} className="flex items-center gap-2">
               {c.href && !last ? (
-                <Link href={c.href} className="rounded underline-offset-4 hover:text-white hover:underline">
+                <Link href={c.href} className={cn("underline underline-offset-4", !heat && "hover:text-white")}>
                   {c.label}
                 </Link>
               ) : (
-                <span aria-current={last ? "page" : undefined} className={last ? "text-steel-300" : undefined}>
+                <span aria-current={last ? "page" : undefined} className={cn(last && (heat ? "font-semibold" : "text-steel-300"))}>
                   {c.label}
                 </span>
               )}
-              {!last && <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />}
+              {!last && <span aria-hidden="true">/</span>}
             </li>
           );
         })}

@@ -7,7 +7,8 @@ import { PHONE_DISPLAY, PHONE_HREF, SectionHeading, container } from "./ui";
  * Native <details>/<summary>: keyboard and screen-reader support for free,
  * works without JS, and every answer is in the DOM for search engines.
  */
-const FAQS = [
+/** Exported so the home page can emit matching FAQPage structured data. */
+export const FAQS = [
   {
     q: "Do you offer emergency service?",
     a: "Yes. Heating, cooling and refrigeration failures don’t wait for business hours, so neither do we. Call us any time — we’ll talk through what’s happening and get a technician out as quickly as we can.",
@@ -42,9 +43,26 @@ const FAQS = [
   },
 ];
 
+/** Shared accordion, also used on the service pages. */
+export function FaqList({ items }: { items: { q: string; a: string }[] }) {
+  return (
+    <div className="border-t-2 border-ink">
+      {items.map((item) => (
+        <details key={item.q} className="group border-b border-steel-300">
+          <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-5 [&::-webkit-details-marker]:hidden">
+            <span className="font-heading text-[18px] font-bold leading-[1.4] text-ink">{item.q}</span>
+            <Plus aria-hidden="true" className="h-5 w-5 shrink-0 text-ink transition-transform duration-200 group-open:rotate-45" />
+          </summary>
+          <p className="max-w-[68ch] pb-6 font-body text-[16px] leading-[1.7] text-steel-700 md:text-[17px]">{item.a}</p>
+        </details>
+      ))}
+    </div>
+  );
+}
+
 export default function Faq() {
   return (
-    <section id="faq" aria-labelledby="faq-title" className="bg-white py-16 md:py-24">
+    <section id="faq" aria-labelledby="faq-title" className="bg-paper py-16 md:py-24">
       <div className={cn(container, "grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16")}>
         <div className="lg:sticky lg:top-28 lg:self-start">
           <SectionHeading
@@ -62,20 +80,7 @@ export default function Faq() {
             }
           />
         </div>
-
-        <div className="border-t border-steel-200">
-          {FAQS.map((item) => (
-            <details key={item.q} className="group border-b border-steel-200">
-              <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-5 [&::-webkit-details-marker]:hidden">
-                <span className="font-heading text-[18px] font-semibold leading-[1.4] text-ink">{item.q}</span>
-                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-steel-300 text-steel-700 transition-colors duration-200 group-open:border-heat group-open:bg-heat group-open:text-ink">
-                  <Plus aria-hidden="true" className="h-[18px] w-[18px] transition-transform duration-200 group-open:rotate-45" />
-                </span>
-              </summary>
-              <p className="max-w-[68ch] pb-6 font-body text-[16px] leading-[1.7] text-steel-700 md:text-[17px]">{item.a}</p>
-            </details>
-          ))}
-        </div>
+        <FaqList items={FAQS} />
       </div>
     </section>
   );
