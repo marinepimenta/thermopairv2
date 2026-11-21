@@ -31,7 +31,6 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
 
 # vercel
 .vercel
@@ -53,3 +52,4 @@ skills-lock.json
 # Original job photos from the client (WhatsApp originals).
 # The optimised, web-sized copies live in public/thermopair/work/.
 /images/
+config.bat
